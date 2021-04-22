@@ -1,6 +1,8 @@
+require('dotenv').config()
 const app = require('./src/app');
 const sequelize = require('./src/models');
 const PORT = 8080;
+
 
 async function assertDatabaseConnectionOk() {
 	console.log(`Checking database connection...`);
