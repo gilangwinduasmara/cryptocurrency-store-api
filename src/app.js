@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const { raw } = require('body-parser');
 
 const routes = [
+    require('./routes'),
 	require('./routes/auth'),
-    require('./routes')
+	require('./routes/users'),
 ];
 
 
