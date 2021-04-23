@@ -1,9 +1,10 @@
 const express = require('express')
 const {body, check, validationResult} = require('express-validator');
 const { models } = require('../models');
+const {Op} = require('sequelize')
 const userModel = require('../models/user.model');
 const router = express.Router();
-
+const jwt = require('jsonwebtoken');
 
 router.get('/auth', (req, res) => {
     res.send('halo');
@@ -12,12 +13,32 @@ router.get('/auth', (req, res) => {
 router.post('/auth/login', 
     body('username', 'Username is required').exists(),
     body('password', 'Password is required').exists(),
-    (req, res) => {
+    async (req, res) => {
         const errors = validationResult(req)
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
         }
-        return res.json({success: true})
+        const user = await models.user.findOne({
+            where: {
+                [Op.and]: [
+                    {
+                        username: req.body.username
+                    },
+                    {
+                        password: req.body.password
+                    },
+
+                ]       
+            }
+        })
+        if(user){
+            const token = jwt.sign(user.id, process.env.TOKEN_SECRET)
+            return res.json({success: true, token})
+        }else{
+            return res.json({
+                success: false
+            })
+        }
     }
 )
 
