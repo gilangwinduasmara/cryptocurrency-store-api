@@ -51,7 +51,7 @@ router.post('/auth/register',
         const errors = validationResult(req)
         console.log('here')
         if(!errors.isEmpty()){
-            return res.status(400).json({errors: errors.array()})
+            return res.status(400).json({success: false, errors: errors.array()})
         }
         const user = await models.user.create({
             email: req.body.email,
