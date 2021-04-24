@@ -6,6 +6,7 @@ const routes = [
     require('./routes'),
 	require('./routes/auth'),
 	require('./routes/users'),
+	require('./routes/assets'),
 ];
 
 

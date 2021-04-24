@@ -10,6 +10,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 
 const modelDefiners = [
 	require('./user.model'),
+	require('./asset.model'),
 	// require('./models/instrument.model'),
 	// require('./models/orchestra.model'),
 	// Add more models here...
