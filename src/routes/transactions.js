@@ -38,8 +38,8 @@ router.post('/transactions', validateToken, async (req, res) => {
         const transaction = await models.transaction.create({
             user_id: user.id,
             asset_id: asset.asset_id,
-            price_usd: asset.price_usd,
-            status: "BUY",
+            price_usd: asset.price_usd || 0,
+            status: req.body.status,
             ammount: req.body.ammount
         })
         return res.json({
