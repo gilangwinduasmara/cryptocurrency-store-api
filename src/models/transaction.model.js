@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
 		},
 		asset_id: {
 			allowNull: false,
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
 		},
         price_usd: {
 			type: DataTypes.DOUBLE,
