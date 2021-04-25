@@ -26,7 +26,7 @@ for (const modelDefiner of modelDefiners) {
 // We execute any extra setup after the models are defined, such as adding associations.
 const { user, asset, transaction } = sequelize.models;
 
-transaction.hasOne(asset, {as: 'asset', sourceKey: 'asset_id', foreignKey: 'asset_id'});
+transaction.belongsTo(asset, {as: 'asset', sourceKey: 'asset_id', foreignKey: 'asset_id'});
 
 // We export the sequelize connection instance to be used around our app.
 module.exports = sequelize;
