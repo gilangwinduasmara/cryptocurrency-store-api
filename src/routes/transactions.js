@@ -37,7 +37,7 @@ router.post('/transactions', validateToken, async (req, res) => {
         const asset = await models.asset.findByPk(req.body.asset_id)
         const transaction = await models.transaction.create({
             user_id: user.id,
-            asset_id: asset.id,
+            asset_id: asset.asset_id,
             price_usd: asset.price_usd,
             status: "BUY",
             ammount: req.body.ammount
