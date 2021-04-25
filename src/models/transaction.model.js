@@ -9,7 +9,8 @@ module.exports = (sequelize) => {
 		id: {
 			allowNull: false,
 			primaryKey: true,
-			type: DataTypes.STRING
+            autoIncrement: true,
+			type: DataTypes.INTEGER
 		},
 		user_id: {
 			allowNull: false,
