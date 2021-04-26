@@ -14,4 +14,20 @@ router.get('/users/:id', validateToken, async (req, res) => {
     return res.json(user)
 })
 
+router.post('/users/topup', validateToken, async (req, res) => {
+	const user = await models.user.findByPk(req.user_id);
+	user.balance = parseFloat(user.balance || 0) + parseFloat(req.body.amount);
+	await user.save();
+	return res.json({success: true, user});
+})
+
+router.put('/users', validateToken, async (req, res) => {
+	const user = await models.user.findByPk(req.user_id);
+	user.username = req.body.username;
+	user.name = req.body.name;
+	user.email = req.body.email;
+	user.save();
+	return res.json({success: true, user: user});
+})
+
 module.exports = router;

@@ -3,14 +3,19 @@ const express = require('express')
 const {body, check, validationResult} = require('express-validator');
 const { validateToken } = require('../middleware/auth');
 const { models, validate, model } = require('../models');
+const {Op} = require('sequelize');
 const router = express.Router();
 
 router.get('/assets', validateToken, async (req, res) => {
     console.log(req.query.page)
     console.log(req.query.type_is_crypto)
     const page = parseInt(req.query.page || 0);
-    const limit = parseInt(req.query.limit || 5);
-    const where = {}
+    const limit = parseInt(req.query.limit || 25);
+    const where = {
+    	price_usd: {
+		[Op.not]: null
+	}
+    }
     if(req.params.type_is_crypto){
         where.type_is_crypto = req.params.type_is_crypto
     }

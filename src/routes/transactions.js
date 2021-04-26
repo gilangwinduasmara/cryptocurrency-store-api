@@ -35,7 +35,7 @@ router.post('/transactions', validateToken, async (req, res) => {
     try{
         const user = await models.user.findByPk(req.user_id)
         const asset = await models.asset.findByPk(req.body.asset_id)
-        const transaction = await models.transaction.create({
+        let transaction = await models.transaction.create({
             user_id: user.id,
             asset_id: asset.asset_id,
             price_usd: asset.price_usd || 0,
@@ -56,10 +56,16 @@ router.post('/transactions', validateToken, async (req, res) => {
 
 router.get('/transactions/user', validateToken, async (req, res) => {
     const user = await models.user.findByPk(req.user_id)
-    const transaction = await models.transaction.findAll({
+    let transaction = await models.transaction.findAll({
         where: {
             user_id: user.id
-        }
+        },
+	include: [
+	  {
+		  model: models.asset,
+		  as: 'asset'
+	  }	
+	]
     })
     return res.json({
         success: true,

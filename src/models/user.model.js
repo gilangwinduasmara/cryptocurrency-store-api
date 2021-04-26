@@ -30,5 +30,9 @@ module.exports = (sequelize) => {
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
+		balance: {
+			type: DataTypes.DOUBLE,
+			defaultValue: 0
+		}
 	});
 };

@@ -6,6 +6,8 @@ const userModel = require('../models/user.model');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
+const {validateToken} = require('../middleware/auth') 
+
 router.get('/auth', (req, res) => {
     res.send('halo');
 })
@@ -41,6 +43,11 @@ router.post('/auth/login',
         }
     }
 )
+
+router.get('/auth/user', validateToken, async (req, res) => {
+	const user = await models.user.findByPk(req.user_id);
+	return res.json({success: true, user})
+})
 
 router.post('/auth/register', 
     body('email').exists(),
