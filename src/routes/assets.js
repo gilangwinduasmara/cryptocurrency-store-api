@@ -3,14 +3,13 @@ const express = require('express')
 const {body, check, validationResult} = require('express-validator');
 const { validateToken } = require('../middleware/auth');
 const { models, validate, model } = require('../models');
-const {Op} = require('sequelize');
+const {Op, sequelize}= require('sequelize');
 const router = express.Router();
 
 router.get('/assets', validateToken, async (req, res) => {
-    console.log(req.query.page)
-    console.log(req.query.type_is_crypto)
-    const page = parseInt(req.query.page || 0);
-    const limit = parseInt(req.query.limit || 25);
+    const user = await models.user.findByPk(req.user_id);
+    const limit = req.query.size ? +reg.query.size : 10;
+    const offset = req.query.page ? req.query.page * limit : 0;
     const where = {
     	price_usd: {
 		[Op.not]: null
@@ -19,15 +18,38 @@ router.get('/assets', validateToken, async (req, res) => {
     if(req.params.type_is_crypto){
         where.type_is_crypto = req.params.type_is_crypto
     }
-    const assets = await models.asset.findAll({
-        offset: page,
+    let assets = await models.asset.findAll({
+        offset: offset,
         limit: limit,
-        where: where
+        where: where,
+	raw: true
     })
+
+    assets = await Promise.all(assets.map( async (asset) => {
+	let user_balance = 0;
+	const transactions = await models.transaction.findAll({
+		where: {
+			asset_id: asset.asset_id,
+			user_id: req.user_id
+		},
+		raw: true
+	})
+
+	    console.log(transactions)
+		transactions.map((transaction) => {
+			if(transaction.status == 'BUY'){
+				user_balance += transaction.ammount
+			}else{
+				user_balance -= transaction.ammount
+			}
+		})
+	
+    	return {...asset, user_balance}
+    }))
+
     const response = {
         success: true,
-        page,
-        limit,
+        page: req.params.page,
         data: assets
     }
     return res.json(response)

@@ -42,6 +42,13 @@ router.post('/transactions', validateToken, async (req, res) => {
             status: req.body.status,
             ammount: req.body.ammount
         })
+
+	if(req.body.status == 'BUY'){
+		user.balance -= asset.price_usd * req.body.ammount
+	}else{
+		user.balance += asset.price_usd * req.body.ammount
+	}
+	
         return res.json({
             success: true,
             data: transaction

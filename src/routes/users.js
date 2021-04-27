@@ -18,6 +18,14 @@ router.post('/users/topup', validateToken, async (req, res) => {
 	const user = await models.user.findByPk(req.user_id);
 	user.balance = parseFloat(user.balance || 0) + parseFloat(req.body.amount);
 	await user.save();
+	await models.transaction.create({
+		user_id: user.id,
+		status: 'TOPUP',
+		asset_id: 'USD',
+		ammount: parseFloat(req.body.amount),
+		price_usd: parseFloat(req.body.amount)
+
+	})
 	return res.json({success: true, user});
 })
 
